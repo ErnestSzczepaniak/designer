@@ -2,13 +2,17 @@
 cmake_minimum_required(VERSION 3.15)
 
 #includes
-include(CMakeConfigBasic.cmake)
-include(CMakeConfigAdvanced.cmake)
-include(${public_root}cmake/CMakeToolchain.cmake)
-include(${public_root}cmake/CMakeFunctions.cmake)
+include(cmake/CMakeConfig.cmake)
+include(cmake/CMakeConfigTarget.cmake)
 
-#build_name
-project(${private_name} LANGUAGES CXX C ASM)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../designer/CMakeToolchain.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../designer/CMakeFunctions.cmake)
 
-include(${public_root}cmake/CMakeConfigGeneric.cmake)
+include(cmake/CMakeConfigProject.cmake)
+include(cmake/CMakeConfigCompilation.cmake)
+
+project(${name_library} LANGUAGES CXX C ASM)
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/../designer/CMakeConfigGeneric.cmake)
+
 

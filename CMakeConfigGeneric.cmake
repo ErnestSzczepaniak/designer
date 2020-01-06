@@ -1,125 +1,134 @@
+# //---------------------------------------------| definitions |---------------------------------------------//
 
 collect_files(
     source_files
-    EXTENSION ${source_extensions}
-    COMMON ${source_common}
-    V7 ${source_v7}
-    V8 ${source_v8}
-    X86 ${source_x86}
+    EXTENSION s S c C cxx CXX cpp CPP
+    COMMON ${source_common} source/
+    TARGET ${source_target}
+    HOST ${source_host} test/
 )
 
-add(
-    LIBRARY
-    TARGET ${name}
-    TYPE ${library_type}
-    COMMON ${source_files}
-)
+# //---------------------------------------------| definitions |---------------------------------------------//
 
-link(
-    TARGET ${name}
-    SCOPE ${dependency_scope}
-    LIBRARY ${dependency_soft}
-)
+if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp")
 
-link(
-    TARGET ${name}
-    SCOPE ${dependency_scope}
-    LIBRARY ${dependency_hard}
-    HARD
-)
+    add(
+        EXECUTABLE 
+        NAME ${name_executable} 
+        COMMON ${source_files} main.cpp
+    )
 
-if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    if (${platform} STREQUAL target)
 
-    add(EXECUTABLE TARGET ${name_executable} COMMON main.cpp)
-    target_link_libraries(${name_executable} ${name})
-    output()
+        link(
+            HARD
+            NAME ${name_executable} 
+            SCOPE ${dependency_scope}
+            LIBRARY architecture_${architecture} 
+        )
+
+    endif()
+
+    set(name_target ${name_executable})
+
+else()
+
+    add(
+        LIBRARY
+        NAME ${name_library}
+        TYPE STATIC
+        COMMON ${source_files}
+    )
+
+    set(name_target ${name_library})
 
 endif()
 
 # //---------------------------------------------| definitions |---------------------------------------------//
 
+link(
+    NAME ${name_target}
+    SCOPE ${dependency_scope}
+    LIBRARY ${dependency}
+)
+
+# //---------------------------------------------| definitions |---------------------------------------------//
+
 target_set(
     COMPILE_DEFINITIONS
-    TARGET ${name}
+    NAME ${name_target}
     SCOPE PUBLIC
     COMMON ${public_definition_common}
-    V7 ${public_definition_v7}
-    V8 ${public_definition_v8}
-    X86 ${public_definition_x86}
+    TARGET ${public_definition_target}
+    HOST ${public_definition_host}
 )
 
 target_set(
     COMPILE_DEFINITIONS
-    TARGET ${name}
+    NAME ${name_target}
     SCOPE PRIVATE
-    COMMON ${private_definition_common} 
-    V7 ${private_definition_v7} 
-    V8 ${private_definition_v8} 
-    X86 ${private_definition_x86}
+    COMMON ${private_definition_common} build_name=${name_library} build_platform_${platform_cached} build_type_${type_cached} build_version_major=${version_major} build_version_minor=${version_minor} build_version_revision=${version_revision}
+    TARGET ${private_definition_target} build_architecture_${architecture_cached} build_core_${core_cached} build_family_${family_cached} build_board_${board_cached}
+    HOST ${private_definition_host}
 )
 
 # //---------------------------------------------| options |---------------------------------------------//
 
 target_set(
     COMPILE_OPTIONS
-    TARGET ${name}
+    NAME ${name_target}
     SCOPE PUBLIC
     COMMON ${public_option_common}
-    V7 ${public_option_v7}
-    V8 ${public_option_v8}
-    X86 ${public_option_x86}
+    TARGET ${public_option_target} -mcpu=cortex-${core}
+    HOST ${public_option_host}
 )
 
 target_set(
     COMPILE_OPTIONS
-    TARGET ${name}
+    NAME ${name_target}
     SCOPE PRIVATE
     COMMON ${private_option_common}
-    V7 ${private_option_v7}
-    V8 ${private_option_v8}
-    X86 ${private_option_x86}
+    TARGET ${private_option_target}
+    HOST ${private_option_host}
 )
 
 # //---------------------------------------------| include |---------------------------------------------//
 
 target_set(
     INCLUDE_DIRECTORIES
-    TARGET ${name}
+    NAME ${name_target}
     SCOPE PUBLIC
-    COMMON ${public_include_common}
-    V7 ${public_include_v7} 
-    V8 ${public_include_v8}
-    X86 ${public_include_x86}
+    COMMON ${public_include_common} include/
+    TARGET ${public_include_target} 
+    HOST ${public_include_host}
 )
 
 target_set(
     INCLUDE_DIRECTORIES
-    TARGET ${name}
+    NAME ${name_target}
     SCOPE PRIVATE
-    COMMON ${private_include_common}
-    V7 ${private_include_v7} 
-    V8 ${private_include_v8}
-    X86 ${private_include_x86}
+    COMMON ${private_include_common} ${CMAKE_CURRENT_SOURCE_DIR}/../designer/
+    TARGET ${private_include_target} 
+    HOST ${private_include_host} test/
 )
+
 
 # //---------------------------------------------| link |---------------------------------------------//
 
 target_set(
     LINK_OPTIONS
-    TARGET ${name}
+    NAME ${name_target}
     SCOPE PUBLIC
     COMMON ${public_link_common}
-    V7 ${public_link_v7}
-    V8 ${public_link_v8}
-    X86 ${public_link_x86}
+    TARGET ${public_link_target}
+    HOST ${public_link_host}
 )
 
 target_set(
     LINK_OPTIONS
-    TARGET ${name}
+    NAME ${name_target}
     SCOPE PRIVATE
     COMMON ${private_link_common}
-    V7 ${private_link_v7}
-    V8 ${private_link_v8}
-    X86 ${private_link_x86}
+    TARGET ${private_link_target}
+    HOST ${private_link_host}
 )

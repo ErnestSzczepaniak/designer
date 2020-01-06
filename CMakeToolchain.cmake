@@ -1,34 +1,39 @@
 if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 
+    set(platform_cached ${platform} CACHE STRING "")
     set(architecture_cached ${architecture} CACHE STRING "")
-    set(target_cached ${target} CACHE STRING "")
+    set(core_cached ${core} CACHE STRING "")
+    set(family_cached ${family} CACHE STRING "")
+    set(board_cached ${board} CACHE STRING "")
     set(type_cached ${type} CACHE STRING "")
-    set(target_sdram_start_cached ${target_sdram_start} CACHE STRING "")
-    set(target_sdram_size_cached ${target_sdram_size} CACHE STRING "")
-    set(target_ocram_start_cached ${target_ocram_start} CACHE STRING "")
-    set(target_ocram_size_cached ${target_ocram_size} CACHE STRING "")
-    set(target_stack_size_cached ${target_stack_size} CACHE STRING "")
-    set(target_pool_size_cached ${target_pool_size} CACHE STRING "")
+    set(sdram_start_cached ${sdram_start} CACHE STRING "")
+    set(sdram_size_cached ${sdram_size} CACHE STRING "")
+    set(ocram_start_cached ${ocram_start} CACHE STRING "")
+    set(ocram_size_cached ${ocram_size} CACHE STRING "")
+    set(stack_size_cached ${stack_size} CACHE STRING "")
+    set(pool_size_cached ${pool_size} CACHE STRING "")
 
-    if (${architecture_cached} STREQUAL x86)
+    if (${platform} STREQUAL host)
 
         set(CMAKE_SYSTEM_NAME Linux)
         set(CMAKE_C_COMPILER /usr/bin/gcc)
         set(CMAKE_CXX_COMPILER /usr/bin/g++)
 
-    elseif(${architecture_cached} STREQUAL v7)
+    else()
 
-        set(CMAKE_SYSTEM_NAME Generic)
-        set(CMAKE_C_COMPILER ${root}/designer/toolchain/v7/bin/arm-none-eabi-gcc)
-        set(CMAKE_CXX_COMPILER ${root}designer/toolchain/v7/bin/arm-none-eabi-g++)
+        if (${architecture} STREQUAL v7)
 
-        set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+            set(CMAKE_SYSTEM_NAME Generic)
+            set(CMAKE_C_COMPILER arm-none-eabi-gcc)
+            set(CMAKE_CXX_COMPILER arm-none-eabi-g++)
 
-    elseif(${architecture_cached} STREQUAL v8)
+        elseif (${architecture} STREQUAL v8)
 
-        set(CMAKE_SYSTEM_NAME Generic)
-        set(CMAKE_C_COMPILER ${root}designer/toolchain/v8/bin/aarch64-none-elf-gcc)
-        set(CMAKE_CXX_COMPILER ${root}designer/toolchain/v8/bin/aarch64-none-elf-g++)
+            set(CMAKE_SYSTEM_NAME Generic)
+            set(CMAKE_C_COMPILER aarch64-none-elf-gcc)
+            set(CMAKE_CXX_COMPILER aarch64-none-elf-g++)
+            
+        endif()
 
         set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 

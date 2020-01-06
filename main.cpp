@@ -1,12 +1,12 @@
-#if build_architecture_x86
+#ifdef build_platform_host
 
+#define CATCH_CONFIG_MAIN
 #include "build.h"
 #include "test.h"
 
 #else
 
 #include "build.h"
-#include "string.h"
 
 int main()
 {
