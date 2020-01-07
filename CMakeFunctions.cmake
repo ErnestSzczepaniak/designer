@@ -55,7 +55,7 @@ function(collect_files output)
 
 endfunction()
 
-# //---------------------------------------------| link |---------------------------------------------//
+# //---------------------------------------------| target set |---------------------------------------------//
 
 function(target_set)
 
@@ -127,11 +127,11 @@ endfunction()
 
 # //---------------------------------------------| link |---------------------------------------------//
 
-function(add)
+function(add output)
 
     set(options LIBRARY EXECUTABLE)
-    set(args NAME TYPE)
-    set(list_args COMMON TARGET HOST)
+    set(args NAME)
+    set(list_args FILES)
 
     cmake_parse_arguments(
         PARSE_ARGV 0
@@ -143,21 +143,24 @@ function(add)
 
     if (${each_LIBRARY})
     
-        if (${platform_cached} STREQUAL target)
-            add_library(${each_NAME} ${each_TYPE} ${each_COMMON} ${each_TARGET})
-        elseif (${platform_cached} STREQUAL host)
-            add_library(${each_NAME} ${each_TYPE} ${each_COMMON} ${each_HOST})
+        if (each_FILES)
+
+            add_library(${each_NAME} STATIC ${each_FILES})
+            set(${output} PUBLIC PARENT_SCOPE)
+
+        else()
+
+            add_library(${each_NAME} INTERFACE)
+            set(${output} INTERFACE PARENT_SCOPE)
+
         endif()
 
     endif()
 
     if (${each_EXECUTABLE})
 
-        if (${platform_cached} STREQUAL target)
-            add_executable(${each_NAME} ${each_COMMON} ${each_TARGET})
-        elseif (${platform_cached} STREQUAL host)
-            add_executable(${each_NAME} ${each_COMMON} ${each_HOST})
-        endif()
+        add_executable(${each_NAME} ${each_FILES})
+        set(${output} PUBLIC PARENT_SCOPE)
 
     endif()
 
@@ -193,66 +196,34 @@ function (link)
 
 endfunction()
 
-# function(output)
+function(dump)
 
-#     if (${dump})
+    if (${dump} AND ${platform_cached} STREQUAL target AND ${architecture_cached} STREQUAL v7a)
 
-#         if (${architecture_cached} STREQUAL v7)
-#             add_custom_command(
-#                 TARGET executable.elf POST_BUILD
-#                 COMMAND ${root_toolchain}toolchain/v7/bin/arm-none-eabi-readelf -S ../binary/executable.elf > ../dump/read_sections.txt
-#                 COMMAND ${root_toolchain}toolchain/v7/bin/arm-none-eabi-readelf -h ../binary/executable.elf > ../dump/read_headers.txt
-#                 COMMAND ${root_toolchain}toolchain/v7/bin/arm-none-eabi-readelf -s ../binary/executable.elf > ../dump/read_symbols.txt
-#                 COMMAND ${root_toolchain}toolchain/v7/bin/arm-none-eabi-objdump -S ../binary/executable.elf > ../dump/dump_assembly.txt
-#                 COMMAND ${root_toolchain}toolchain/v7/bin/arm-none-eabi-objdump -s ../binary/executable.elf > ../dump/dump_sections_content.txt
-#                 COMMAND ${root_toolchain}toolchain/v7/bin/arm-none-eabi-objdump -h ../binary/executable.elf > ../dump/dump_sections.txt
-#                 COMMAND ${root_toolchain}toolchain/v7/bin/arm-none-eabi-objdump -t ../binary/executable.elf > ../dump/dump_symbols.txt
-#             )
-#         elseif(${architecture_cached} STREQUAL v8)
-#             add_custom_command(
-#                 TARGET executable.elf POST_BUILD
-#                 COMMAND ${root_toolchain}toolchain/v8/bin/aarch64-none-elf-readelf -S ../binary/executable.elf > ../dump/read_sections.txt
-#                 COMMAND ${root_toolchain}toolchain/v8/bin/aarch64-none-elf-readelf -h ../binary/executable.elf > ../dump/read_headers.txt
-#                 COMMAND ${root_toolchain}toolchain/v8/bin/aarch64-none-elf-readelf -s ../binary/executable.elf > ../dump/read_symbols.txt
-#                 COMMAND ${root_toolchain}toolchain/v8/bin/aarch64-none-elf-objdump -S ../binary/executable.elf > ../dump/dump_assembly.txt
-#                 COMMAND ${root_toolchain}toolchain/v8/bin/aarch64-none-elf-objdump -s ../binary/executable.elf > ../dump/dump_sections_content.txt
-#                 COMMAND ${root_toolchain}toolchain/v8/bin/aarch64-none-elf-objdump -h ../binary/executable.elf > ../dump/dump_sections.txt
-#                 COMMAND ${root_toolchain}toolchain/v8/bin/aarch64-none-elf-objdump -t ../binary/executable.elf > ../dump/dump_symbols.txt
-#             )
-#         elseif (${architecture_cached} STREQUAL x86)
-#             add_custom_command(
-#                 TARGET executable.elf POST_BUILD
-#                 COMMAND usr/bin/readelf -S ../binary/executable.elf > ../dump/read_sections.txt
-#                 COMMAND usr/bin/readelf -h ../binary/executable.elf > ../dump/read_headers.txt
-#                 COMMAND usr/bin/readelf -s ../binary/executable.elf > ../dump/read_symbols.txt
-#                 COMMAND usr/bin/objdump -S ../binary/executable.elf > ../dump/dump_assembly.txt
-#                 COMMAND usr/bin/objdump -s ../binary/executable.elf > ../dump/dump_sections_content.txt
-#                 COMMAND usr/bin/objdump -h ../binary/executable.elf > ../dump/dump_sections.txt
-#                 COMMAND usr/bin/objdump -t ../binary/executable.elf > ../dump/dump_symbols.txt
-#             )
-#         endif()
+        add_custom_command(
+            TARGET executable.elf POST_BUILD
+            COMMAND arm-none-eabi-readelf -S ../binary/executable.elf > ../dump/read_sections.txt
+            COMMAND arm-none-eabi-readelf -h ../binary/executable.elf > ../dump/read_headers.txt
+            COMMAND arm-none-eabi-readelf -s ../binary/executable.elf > ../dump/read_symbols.txt
+            COMMAND arm-none-eabi-objdump -S ../binary/executable.elf > ../dump/dump_assembly.txt
+            COMMAND arm-none-eabi-objdump -s ../binary/executable.elf > ../dump/dump_sections_content.txt
+            COMMAND arm-none-eabi-objdump -h ../binary/executable.elf > ../dump/dump_sections.txt
+            COMMAND arm-none-eabi-objdump -t ../binary/executable.elf > ../dump/dump_symbols.txt
+        )
 
-#     endif()
+    endif()
 
-#     if (${image})
+endfunction()
 
-#         if (${architecture_cached} STREQUAL v7)
-#             add_custom_command(
-#                 TARGET executable.elf POST_BUILD
-#                 COMMAND ${root_toolchain}toolchain/v7/bin/arm-none-eabi-objcopy -O binary ../binary/executable.elf ../binary/executable.bin
-#                 COMMAND mkimage -A arm -T standalone -C none -a 0 -e 0 -n "executable.elf" -d ../binary/executable.bin ../binary/executable.img
-#             )
-#         elseif (${architecture_cached} STREQUAL v8)
-#             add_custom_command(
-#                 TARGET executable.elf POST_BUILD
-#                 COMMAND ${root_toolchain}toolchain/v8/bin/aarch64-none-elf-objcopy -O binary ../binary/executable.elf ../binary/executable.bin
-#                 COMMAND mkimage -A arm -T standalone -C none -a 0 -e 0 -n "executable.elf" -d ../binary/executable.bin ../binary/executable.img
-#             )
-#         elseif (${architecture_cachedd} STREQUAL x86)
+function (image)
 
-#         endif()
+    if (${image} AND ${platform_cached} STREQUAL target AND ${architecture_cached} STREQUAL v7a)
+        add_custom_command(
+            TARGET executable.elf POST_BUILD
+            COMMAND arm-none-eabi-objcopy -O binary ../binary/executable.elf ../binary/executable.bin
+            COMMAND mkimage -A arm -T standalone -C none -a 0 -e 0 -n "executable.elf" -d ../binary/executable.bin ../binary/executable.img
+        )
+        
+    endif()
 
-
-#     endif()
-
-# endfunction()
+endfunction()

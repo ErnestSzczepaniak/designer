@@ -21,13 +21,13 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 
     else()
 
-        if (${architecture} STREQUAL v7)
+        if (${architecture} STREQUAL v7a)
 
             set(CMAKE_SYSTEM_NAME Generic)
             set(CMAKE_C_COMPILER arm-none-eabi-gcc)
             set(CMAKE_CXX_COMPILER arm-none-eabi-g++)
 
-        elseif (${architecture} STREQUAL v8)
+        elseif (${architecture} STREQUAL v8a)
 
             set(CMAKE_SYSTEM_NAME Generic)
             set(CMAKE_C_COMPILER aarch64-none-elf-gcc)

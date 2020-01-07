@@ -25,7 +25,7 @@ case $command  in
     cp -r test/ $dir/$name/test
     cp -r .vscode/ $dir/$name
 
-    sed -i "s/@project_name/$name/g" $dir/$name/cmake/CMakeConfigProject.cmake
+    sed -i "s/@project_name/$name/g" $dir/$name/cmake/CMakeConfigBasic.cmake
   ;;
 
    *)
