@@ -27,7 +27,7 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR AND EXISTS "${CMAKE_CURRE
             HARD
             NAME ${name_executable} 
             SCOPE ${dependency_scope}
-            LIBRARY architecture_${architecture} 
+            LIBRARY startup_${architecture} 
         )
 
     endif()
@@ -76,7 +76,7 @@ if (source_files)
         NAME ${name_target}
         SCOPE PRIVATE
         COMMON ${private_definition_common} build_name=${name_library} build_platform_${platform_cached} build_type_${type_cached} build_version_major=${version_major} build_version_minor=${version_minor} build_version_revision=${version_revision}
-        TARGET ${private_definition_target} build_architecture_${architecture_cached} build_core_${core_cached} build_family_${family_cached} build_board_${board_cached}
+        TARGET ${private_definition_target} build_architecture_${architecture_cached} build_core_${core_cached} build_gic_${gic_cached} build_family_${family_cached} build_board_${board_cached}
         HOST ${private_definition_host}
     )
 

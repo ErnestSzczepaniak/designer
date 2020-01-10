@@ -34,6 +34,11 @@ enum class Build_core
     m7
 };
 
+enum class Build_gic
+{
+    pl390
+};
+
 enum class Build_family
 {
     c5,
@@ -67,6 +72,7 @@ struct Build
     #ifdef build_platform_target
     Build_architecture architecture;
     Build_core core;
+    Build_gic gic;
     Build_family family;
     Build_board board;
     #endif
@@ -123,6 +129,10 @@ static constexpr Build build
     .core = Build_core::m4,
     #elif build_core_m7
     .core = Build_core::m7,
+    #endif
+
+    #ifdef build_gic_pl390
+    .gic = Build_gic::pl390,
     #endif
 
     #ifdef build_family_c5
