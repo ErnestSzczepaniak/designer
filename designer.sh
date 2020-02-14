@@ -1,33 +1,15 @@
 #!/usr/bin/env bash
 
-while getopts "c:n:d:D:" opt; do
-  case $opt in
-    c) command=$OPTARG;;  
-    n) name=$OPTARG;;
-    d) dir=$OPTARG;;
-    D) subdir=$OPTARG;;
-    *) echo 'error' >&2
-       exit 1
-  esac
-done
+mkdir ../$1
+mkdir ../$1/binary
+mkdir ../$1/build 
+mkdir ../$1/dump 
+mkdir ../$1/include 
+mkdir ../$1/source 
+cp main.cpp ../$1/
+cp CMakeLists.txt ../$1/
+cp -r cmake/ ../$1/cmake/
+cp -r test/ ../$1/test
+cp -r .vscode/ ../$1
 
-case $command  in 
-  "create")
-    mkdir $dir/$name
-    mkdir $dir/$name/binary
-    mkdir $dir/$name/build 
-    mkdir $dir/$name/dump 
-    mkdir $dir/$name/include 
-    mkdir $dir/$name/source 
-    cp main.cpp $dir/$name/
-    cp CMakeLists.txt $dir/$name/
-    cp -r cmake/ $dir/$name/cmake/
-    cp -r test/ $dir/$name/test
-    cp -r .vscode/ $dir/$name
-
-    sed -i "s/@project_name/$name/g" $dir/$name/cmake/CMakeConfigBasic.cmake
-  ;;
-
-   *)
-
-esac
+sed -i "s/@project_name/$1/g" ../$1/cmake/CMakeConfigBasic.cmake

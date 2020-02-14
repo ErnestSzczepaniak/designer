@@ -1,6 +1,6 @@
 # ---------------------------------------------| config |--------------------------------------------- #
 
-set(platform                    target)
+set(platform                    host)
 
 set(type                        debug)
 
@@ -8,8 +8,8 @@ set(version_major               1)
 set(version_minor               0)
 set(version_revision            0)
 
-option(dump ""                  on)
-option(image ""                 on)
+option(dump ""                  off)
+option(image ""                 off)
 
 # ---------------------------------------------| project |--------------------------------------------- #
 
@@ -17,7 +17,9 @@ set(name_library                @project_name)
 
 set(name_executable             executable.elf)
 
-set(dependency                  )
+set(dependency_common           )
+set(dependency_host             )
+
 set(dependency_scope            PRIVATE)
 
 # ---------------------------------------------| target |--------------------------------------------- #

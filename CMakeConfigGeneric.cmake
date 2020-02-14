@@ -21,16 +21,11 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR AND EXISTS "${CMAKE_CURRE
         FILES ${source_files}
     )
 
-    if (${platform} STREQUAL target)
-
-        link(
-            HARD
-            NAME ${name_executable} 
-            SCOPE ${dependency_scope}
-            LIBRARY startup_${architecture} 
-        )
-
-    endif()
+    link(
+        NAME ${name_executable}
+        SCOPE ${dependency_scope}
+        TARGET startup_${architecture}
+    )
 
     dump()
     image()
@@ -55,7 +50,8 @@ endif()
 link(
     NAME ${name_target}
     SCOPE ${dependency_scope}
-    LIBRARY ${dependency}
+    COMMON ${dependency_common}
+    HOST ${dependency_host}
 )
 
 # //---------------------------------------------| definitions |---------------------------------------------//
