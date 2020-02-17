@@ -22,9 +22,10 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR AND EXISTS "${CMAKE_CURRE
     )
 
     link(
+        HARD
         NAME ${name_executable}
         SCOPE ${dependency_scope}
-        TARGET startup_${architecture}
+        INTERNAL_TARGET startup_${architecture}
     )
 
     dump()
@@ -48,10 +49,14 @@ endif()
 # //---------------------------------------------| definitions |---------------------------------------------//
 
 link(
-    NAME ${name_target}
+    name ${name_target}
     SCOPE ${dependency_scope}
-    COMMON ${dependency_common}
-    HOST ${dependency_host}
+    INTERNAL_COMMON ${dependency_internal_common}
+    INTERNAL_TARGET ${dependency_internal_target}
+    INTERNAL_HOST ${dependency_internal_host}
+    EXTERNAL_COMMON ${dependency_external_common}
+    EXTERNAL_TARGET ${dependency_external_target}
+    EXTERNAL_HOST ${dependency_external_host}
 )
 
 # //---------------------------------------------| definitions |---------------------------------------------//

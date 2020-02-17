@@ -170,9 +170,9 @@ endfunction()
 
 function (link)
 
-    set(options)
+    set(options HARD)
     set(args NAME SCOPE)
-    set(list_args COMMON TARGET HOST)
+    set(list_args INTERNAL_COMMON INTERNAL_HOST INTERNAL_TARGET EXTERNAL_COMMON EXTERNAL_TARGET EXTERNAL_HOST)
 
     cmake_parse_arguments(
         PARSE_ARGV 0
@@ -182,19 +182,50 @@ function (link)
         "${list_args}"
     )
 
-    foreach (library ${each_COMMON})
+    foreach (library ${each_INTERNAL_COMMON})
 
         add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../${library}/ ${CMAKE_CURRENT_BINARY_DIR}/${library}/)
-        target_link_libraries(${each_NAME} ${each_SCOPE} ${library})
+
+        if (${each_HARD})
+            target_link_libraries(${each_NAME} ${each_SCOPE} ${library})
+        else()
+            target_link_libraries(${each_NAME} ${each_SCOPE} -Wl,--whole-archive ${library} -Wl,--no-whole-archive)
+        endif()
 
     endforeach()
 
+    foreach (library ${each_EXTERNAL_COMMON})
+
+        if (${each_HARD})
+            target_link_libraries(${each_NAME} ${each_SCOPE} ${library})
+        else()
+            target_link_libraries(${each_NAME} ${each_SCOPE} -Wl,--whole-archive ${library} -Wl,--no-whole-archive)
+        endif()
+
+    endforeach()
+
+
     if (${platform_cached} STREQUAL target)
 
-        foreach(library ${each_TARGET})
-            
+        foreach (library ${each_INTERNAL_TARGET})
+
             add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../${library}/ ${CMAKE_CURRENT_BINARY_DIR}/${library}/)
-            target_link_libraries(${each_NAME} ${each_SCOPE} -Wl,--whole-archive ${library} -Wl,--no-whole-archive)
+
+            if (${each_HARD})
+                target_link_libraries(${each_NAME} ${each_SCOPE} ${library})
+            else()
+                target_link_libraries(${each_NAME} ${each_SCOPE} -Wl,--whole-archive ${library} -Wl,--no-whole-archive)
+            endif()
+
+        endforeach()
+
+        foreach (library ${each_EXTERNAL_TARGET})
+
+            if (${each_HARD})
+                target_link_libraries(${each_NAME} ${each_SCOPE} ${library})
+            else()
+                target_link_libraries(${each_NAME} ${each_SCOPE} -Wl,--whole-archive ${library} -Wl,--no-whole-archive)
+            endif()
 
         endforeach()
 
@@ -202,9 +233,25 @@ function (link)
 
     if (${platform_cached} STREQUAL host)
 
-        foreach(library ${each_HOST})
-            
-            target_link_libraries(${each_NAME} ${each_SCOPE} ${library})
+        foreach (library ${each_INTERNAL_HOST})
+
+            add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../${library}/ ${CMAKE_CURRENT_BINARY_DIR}/${library}/)
+
+            if (${each_HARD})
+                target_link_libraries(${each_NAME} ${each_SCOPE} ${library})
+            else()
+                target_link_libraries(${each_NAME} ${each_SCOPE} -Wl,--whole-archive ${library} -Wl,--no-whole-archive)
+            endif()
+
+        endforeach()
+
+        foreach (library ${each_EXTERNAL_HOST})
+
+            if (${each_HARD})
+                target_link_libraries(${each_NAME} ${each_SCOPE} ${library})
+            else()
+                target_link_libraries(${each_NAME} ${each_SCOPE} -Wl,--whole-archive ${library} -Wl,--no-whole-archive)
+            endif()
 
         endforeach()
 
