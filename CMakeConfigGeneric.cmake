@@ -49,7 +49,7 @@ endif()
 # //---------------------------------------------| definitions |---------------------------------------------//
 
 link(
-    name ${name_target}
+    NAME ${name_target}
     SCOPE ${dependency_scope}
     INTERNAL_COMMON ${dependency_internal_common}
     INTERNAL_TARGET ${dependency_internal_target}
