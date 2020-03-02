@@ -10,6 +10,7 @@ set(version_revision            0)
 
 option(dump ""                  off)
 option(image ""                 off)
+option(documentation ""         off)
 
 # ---------------------------------------------| project |--------------------------------------------- #
 
