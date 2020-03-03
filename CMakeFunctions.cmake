@@ -290,3 +290,16 @@ function (image)
     endif()
 
 endfunction()
+
+function (documentation)
+
+    if (${documentation})
+
+        add_custom_command(
+            TARGET executable.elf POST_BUILD
+            COMMAND doxygen ../doxygen/DoxygenConfigBasic
+        )
+
+    endif()
+
+endfunction()

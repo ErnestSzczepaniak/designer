@@ -30,6 +30,7 @@ if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR AND EXISTS "${CMAKE_CURRE
 
     dump()
     image()
+    documentation()
 
     set(name_target ${name_executable})
 
