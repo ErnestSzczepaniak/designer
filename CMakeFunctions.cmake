@@ -98,7 +98,7 @@ function(target_set)
     if (${each_COMPILE_OPTIONS})
 
         if (${type_cached} STREQUAL debug)
-            target_compile_options(${each_NAME} ${each_SCOPE} ${each_COMMON} -g)
+            target_compile_options(${each_NAME} ${each_SCOPE} ${each_COMMON} -g -gstrict-dwarf)
         elseif (${type_cached} STREQUAL release)
             target_compile_options(${each_NAME} ${each_SCOPE} ${each_COMMON})
         endif()
